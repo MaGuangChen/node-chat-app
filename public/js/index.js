@@ -13,7 +13,8 @@ socket.on('connect', function () { // 用socketIO打開webSocket
 });
 
 socket.on('newMessage', function(res) {
-    console.log(res.from + ': ' + res.text + '  ' + res.createdAt)
+    console.log(res);
+    console.log(res.from + ': ' + res.text + '.  ' + res.createdAt)
 })
 
 socket.on('disconnect', function() {

@@ -34,12 +34,13 @@ io.on('connection', (socket) => {
     // socket.emit 一個加入聊天室的歡迎詞
     socket.emit('newMessage', {
         from: 'PaulBot',
-        text: `Welcome to the chat app ${user}`
+        text: `Welcome to the chat app ${user}`,
+        createdAt: new Date().getTime()
     })
     socket.broadcast.emit('newMessage', {
         from: 'PaulBot',
         text: `Welcome to the chat app ${user}`,
-        createdAt: new Date().getTime
+        createdAt: new Date().getTime()
     })
 
     socket.on('createMessage', (message) => {
