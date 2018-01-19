@@ -30,15 +30,35 @@ io.on('connection', (socket) => {
     console.log('New user connected');
     // emit這個method只能單純的回傳某個資料，而不能回傳callback function
     
+    let user = 'Paul'
+    // socket.emit 一個加入聊天室的歡迎詞
+    socket.emit('newMessage', {
+        from: 'PaulBot',
+        text: `Welcome to the chat app ${user}`
+    })
+    socket.broadcast.emit('newMessage', {
+        from: 'PaulBot',
+        text: `Welcome to the chat app ${user}`,
+        createdAt: new Date().getTime
+    })
+
     socket.on('createMessage', (message) => {
         // socket.emit 是發射到單一connection
         // io.emit 是發射到每一個單一的connection
-        if(message) { console.log('接收到message') }
+        console.log('接收到message')
+
         io.emit('newMessage', {
             from: message.from,
             text: message.text,
             createdAt: new Date().getTime()
         })
+        // broadcast有自己的emit function
+        // 可以限制連線的人於特定
+        // socket.broadcast.emit('newMessage', {
+        //     from: message.from,
+        //     text: message.text,
+        //     createdAt: new Date().getTime()
+        // })
     })
 
     // 這邊是socket.on聽某個事件的callback function

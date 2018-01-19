@@ -12,8 +12,6 @@ socket.on('connect', function () { // 用socketIO打開webSocket
     // })
 });
 
-
-
 socket.on('newMessage', function(res) {
     console.log(res.from + ': ' + res.text + '  ' + res.createdAt)
 })
@@ -21,3 +19,9 @@ socket.on('newMessage', function(res) {
 socket.on('disconnect', function() {
     console.log('Disconnected from server');
 });
+
+
+// socket.emit('createMessage', {
+// 	to: '鍾哥',
+// 	message: '您好您好您好ㄆㄆ!'
+// })
