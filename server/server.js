@@ -29,44 +29,23 @@ app.use(express.static(publicPath)); // middleware 代表讓express host這個�
 io.on('connection', (socket) => {
     console.log('New user connected');
     // emit這個method只能單純的回傳某個資料，而不能回傳callback function
-    socket.emit('newEmail', 
-        [{
-            from: 'paul@findata.com.tw',
-            title: '協助我寫Code',
-            body: '快點幫我寫'
-        },
-        {
-            from: 'mike@yahoo.com.tw',
-            title: '欸欸',
-            body: '我想吃麵'
-        }]
-    );
-
-    socket.on('createEmail', (newEmail) => {
-        console.log('Server is received created email')
-        console.log(newEmail)
-    })
     
-    let recivedNewMessage = false;
-    let doneMessage = null;
-    socket.on('createMessage', (newMessage) => {
-        console.log(newMessage);
-        recivedNewMessage = true;
-        doneMessage = newMessage;
-        if(recivedNewMessage) {
-            socket.emit('doneCreateMessage', doneMessage)
-        }
-        recivedNewMessage = false;
-        doneMessage = null;
+    socket.on('createMessage', (message) => {
+        // socket.emit 是發射到單一connection
+        // io.emit 是發射到每一個單一的connection
+        if(message) { console.log('接收到message') }
+        io.emit('newMessage', {
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        })
     })
+
     // 這邊是socket.on聽某個事件的callback function
     socket.on('disconnect', () => {
       console.log('User was disconnected');
     });
 });
-
-
-
 
 // 以往我們使用express 直接聽port 
 // 在這邊我們用http server去聽
@@ -74,7 +53,33 @@ server.listen(port, () => {
     console.log(`Now App runing on ${port}`)
 })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // 在背景中，
 // express確實是使用了node的http模組來建立這個http server
 // 因此當我們要使用socket.io時，事實上我們需要自己建立一些定義
 // 表示我們要使用http server且要支援websocket
+
+
+
+// let recivedNewMessage = false;
+// let doneMessage = null;
+// recivedNewMessage = true;
+// doneMessage = newMessage;
+        // if(recivedNewMessage) {
+        //     socket.emit('doneCreateMessage', doneMessage)
+        // }
+        // recivedNewMessage = false;
+        // doneMessage = null;
