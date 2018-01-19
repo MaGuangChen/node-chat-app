@@ -3,6 +3,8 @@ const http = require('http') // 內建因為我們要自己用http
 const path = require('path'); // 內建的
 const socketIO = require('socket.io');
 
+const { generateMessage } = require('./utils/message');
+
 // C:\Users\USER\Desktop\node-chat-app\public
 const publicPath = path.join(__dirname, '../public');
 
@@ -30,18 +32,16 @@ io.on('connection', (socket) => {
     console.log('New user connected');
     // emit這個method只能單純的回傳某個資料，而不能回傳callback function
     
-    let user = 'Paul'
+
     // socket.emit 一個加入聊天室的歡迎詞
-    socket.emit('newMessage', {
-        from: 'PaulBot',
-        text: `Welcome to the chat app ${user}`,
-        createdAt: new Date().getTime()
-    })
-    socket.broadcast.emit('newMessage', {
-        from: 'PaulBot',
-        text: `Welcome to the chat app ${user}`,
-        createdAt: new Date().getTime()
-    })
+    socket.emit(
+        'newMessage', 
+        generateMessage('PaulBot', `Welcome to the chat app`)
+    )
+    socket.broadcast.emit(
+        'newMessage','newMessage', 
+        generateMessage('PaulBot', `Welcome to the chat app`)
+    )
 
     socket.on('createMessage', (message) => {
         // socket.emit 是發射到單一connection
